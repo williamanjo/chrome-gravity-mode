@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Gravity Mode</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      margin: 0;
+      padding: 16px;
+      width: 240px;
+      font: 13px/1.45 system-ui, -apple-system, Segoe UI, sans-serif;
+      background: #11131a;
+      color: #e7e9f0;
+    }
+    h1 { margin: 0 0 4px; font-size: 15px; }
+    p.hint { margin: 0 0 14px; font-size: 11.5px; color: #9aa0b4; }
+    button {
+      width: 100%;
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      background: #4f7cff;
+      color: #fff;
+    }
+    button:hover { background: #3f6ae8; }
+    button.off { background: #2a2e3c; color: #e7e9f0; }
+    label.toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 12px;
+      color: #c3c8d8;
+    }
+    .chance { margin-top: 16px; }
+    .chance .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 12px;
+      color: #c3c8d8;
+    }
+    .chance output { font-weight: 700; font-size: 14px; color: #8fa8ff; }
+    .chance input[type=range] { width: 100%; margin: 6px 0 0; accent-color: #4f7cff; }
+    .chance .hint { font-size: 11px; color: #757b90; }
+    footer { margin-top: 12px; font-size: 11px; color: #757b90; }
+  </style>
+</head>
+<body>
+  <h1>Gravity Mode</h1>
+  <p class="hint">Ativo, a pagina desaba quando o mouse entra nela (volta de outra janela, da barra do navegador ou de fora da tela). Arraste os pedacos. <kbd>Esc</kbd> restaura.</p>
+
+  <button id="toggle">Ativar nesta aba</button>
+
+  <div class="chance">
+    <div class="row">
+      <span>Chance de desabar</span>
+      <output id="chanceValue">20%</output>
+    </div>
+    <input type="range" id="chance" min="1" max="100" step="1" value="20" />
+    <div class="hint">Sorteio a cada vez que o mouse entra na pagina.</div>
+  </div>
+
+  <label class="toggle">
+    <input type="checkbox" id="autoRun" />
+    Ativar automatico em toda pagina
+  </label>
+
+  <footer id="status">&nbsp;</footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

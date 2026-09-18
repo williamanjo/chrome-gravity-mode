@@ -1,0 +1,6 @@
+.min.js
+test/wiki-raw.html
+test/wikipedia.html
+node_modules/
+.DS_Store
+Thumbs.db

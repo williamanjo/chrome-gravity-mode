@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Gravity Mode - demo local</title>
+  <style>
+    body { font: 15px/1.5 system-ui, sans-serif; margin: 0; padding: 24px; background: #f4f5f9; color: #1a1c22; }
+    header { background: #4f7cff; color: #fff; padding: 18px 20px; border-radius: 10px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+    .card { background: #fff; border-radius: 10px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+    .chips { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { background: #e6ebff; color: #2a3f8f; border-radius: 999px; padding: 6px 12px; }
+    .fx { transform: translateZ(0); margin-top: 20px; padding: 12px; background: #fff3d6; border-radius: 10px; }
+    button { padding: 8px 14px; border: 0; border-radius: 8px; background: #1a1c22; color: #fff; }
+  </style>
+</head>
+<body>
+  <header><h1>Pagina de teste</h1><p>Um cabecalho, cards, chips e um bloco dentro de ancestral com transform.</p></header>
+
+  <div class="cards">
+    <div class="card"><h3>Card um</h3><p>Texto de exemplo para virar corpo rigido.</p><button>Acao</button></div>
+    <div class="card"><h3>Card dois</h3><p>Outro paragrafo qualquer aqui dentro.</p><a href="#">Um link</a></div>
+    <div class="card"><h3>Card tres</h3><ul><li>Item A</li><li>Item B</li><li>Item C</li></ul></div>
+  </div>
+
+  <div class="chips">
+    <span class="chip">alpha</span><span class="chip">beta</span><span class="chip">gama</span>
+    <span class="chip">delta</span><span class="chip">epsilon</span><span class="chip">zeta</span>
+    <span class="chip">eta</span><span class="chip">teta</span><span class="chip">iota</span>
+  </div>
+
+  <div class="fx"><strong>Ancestral com transform:</strong> este bloco testa o reparent para o body.</div>
+
+  <script>
+    // Stub minimo da API de extensao para rodar o content script em file://.
+    // ?chance=NN controla a probabilidade da queda (padrao 100).
+    const chance = Number(new URLSearchParams(location.search).get('chance')) || 100;
+    window.chrome = {
+      runtime: { onMessage: { addListener() {} } },
+      storage: { sync: { get(defaults, cb) { cb({ autoRun: true, chance }); } } }
+    };
+  </script>
+  <script src="../content.js"></script>
+</body>
+</html>
