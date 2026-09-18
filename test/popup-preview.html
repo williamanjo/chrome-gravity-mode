@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Gravity Mode - preview do popup</title>
+  <style>
+    body { margin: 0; background: #0b0d13; }
+    #log {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 360px;
+      height: 100vh;
+      overflow: auto;
+      margin: 0;
+      padding: 12px;
+      box-sizing: border-box;
+      font: 11px/1.5 ui-monospace, Consolas, monospace;
+      color: #8fd3a0;
+      background: #0f1119;
+      border-left: 1px solid #242838;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <pre id="log"></pre>
+
+  <script>
+    // Stub das APIs de extensao para abrir o popup fora do Chrome.
+    // O estado da aba vive aqui: o content script real nao existe no preview.
+    const store = {};
+    const tabState = { armed: false, falling: false, chance: 20 };
+    const log = (...args) => {
+      document.getElementById('log').textContent +=
+        args.map((a) => (typeof a === 'string' ? a : JSON.stringify(a))).join(' ') + '\n';
+    };
+
+    window.chrome = {
+      runtime: { lastError: null },
+      storage: {
+        sync: {
+          async get(defaults) {
+            const out = {};
+            for (const key of Object.keys(defaults)) {
+              out[key] = key in store ? store[key] : defaults[key];
+            }
+            return out;
+          },
+          async set(values) {
+            Object.assign(store, values);
+            log('storage.set', values);
+          }
+        }
+      },
+      tabs: {
+        async query() {
+          return [{ id: 1 }];
+        },
+        sendMessage(_tabId, message, cb) {
+          if (message.type === 'gravity:toggle') tabState.armed = !tabState.armed;
+          if (message.type === 'gravity:chance') tabState.chance = message.chance;
+          if (message.chance && message.type === 'gravity:toggle') tabState.chance = message.chance;
+          if (!tabState.armed) tabState.falling = false;
+          log('sendMessage', message.type, '->', tabState);
+          cb(Object.assign({}, tabState));
+        }
+      }
+    };
+    window.__tabState = tabState;
+    window.__store = store;
+  </script>
+
+  <script>
+    // Injeta o markup real do popup.html e so entao roda o popup.js real.
+    fetch('../popup.html')
+      .then((r) => r.text())
+      .then((html) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const style = document.createElement('style');
+        style.textContent = doc.querySelector('style').textContent;
+        document.head.appendChild(style);
+
+        const host = document.createElement('div');
+        host.innerHTML = doc.body.innerHTML;
+        host.querySelectorAll('script').forEach((s) => s.remove());
+        document.body.prepend(host);
+
+        const script = document.createElement('script');
+        script.src = '../popup.js';
+        document.body.appendChild(script);
+      });
+  </script>
+</body>
+</html>

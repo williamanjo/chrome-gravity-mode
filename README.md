@@ -30,6 +30,22 @@ Slack, volta pro Chrome e às vezes a página desaba. Mexer o slider com a aba j
 chance na hora, sem precisar reativar. O valor fica em `chrome.storage.sync`, então acompanha o
 perfil do Chrome.
 
+## Senha para desativar
+
+No popup dá para definir uma senha. Com ela ativa, **Desativar nesta aba** e desligar o modo
+automático passam a pedir a senha; ativar e mexer na chance continuam livres. A senha não é
+guardada em claro — fica só o SHA-256 dela com um salt aleatório de 16 bytes, em
+`chrome.storage.sync`. **Remover senha** também exige a senha atual.
+
+Isso é trava de brincadeira, não segurança:
+
+- não impede ninguém de desativar ou remover a extensão em `chrome://extensions` — nenhuma
+  extensão pode bloquear a própria remoção (só política de empresa, com force-install)
+- quem abrir o DevTools da página consegue restaurar o DOM na mão
+- quem apagar os dados da extensão apaga o hash junto
+
+Esqueceu a senha? Remova e reinstale a extensão, ou limpe o storage dela.
+
 ## Como as peças são escolhidas
 
 `collectElements()` desce a árvore do DOM de cima para baixo e para no primeiro nível que já é
@@ -63,8 +79,9 @@ A rotação é visual — a colisão usa a caixa alinhada aos eixos.
 | --- | --- |
 | `manifest.json` | MV3, content script em `<all_urls>`, permissões `storage` e `activeTab` |
 | `content.js` | Coleta de peças + motor de física + ciclo armar/parar |
-| `popup.html` / `popup.js` | Botão de ativar/restaurar e o toggle de automático |
+| `popup.html` / `popup.js` | Ativar/desativar, slider de chance, modo automático e a senha |
 | `test/local-demo.html` | Página de teste que injeta o content script com um stub da API `chrome` |
+| `test/popup-preview.html` | Abre o popup real fora do Chrome, com as APIs de extensão stubadas |
 
 ## Teste local
 
@@ -76,3 +93,7 @@ python -m http.server 8765 --bind 127.0.0.1
 
 Depois abra <http://127.0.0.1:8765/test/local-demo.html> e tire/traga o mouse para a página. Use
 `?chance=NN` para testar a probabilidade (`?chance=100` desaba sempre, `?chance=1` quase nunca).
+
+Para mexer no popup sem instalar a extensão:
+<http://127.0.0.1:8765/test/popup-preview.html> — ele stuba `chrome.storage` e `chrome.tabs` e
+mostra num log lateral cada mensagem e cada gravação no storage.
