@@ -13,6 +13,8 @@ o motor (integração, colisão AABB, empilhamento, arraste) está em `content.j
 ## Usar
 
 - Clique no ícone da extensão → **Ativar nesta aba** (fica ligado até você desativar)
+- Com **Automático em toda página** ligado, o botão principal vira **Desligar em todas as
+  páginas** — desativar só a aba não adiantaria nada, já que a próxima página arma sozinha
 - O gatilho é o mouse **entrar** na página — voltando de outra janela, da barra do navegador ou
   de fora da tela. Navegar com o mouse dentro da página não dispara nada
 - Quando cai: os elementos batem no chão e empilham
@@ -32,8 +34,9 @@ perfil do Chrome.
 
 ## Senha para desativar
 
-No popup dá para definir uma senha. Com ela ativa, **Desativar nesta aba** e desligar o modo
-automático passam a pedir a senha; ativar e mexer na chance continuam livres. A senha não é
+No popup dá para definir uma senha. Com ela ativa, **Desativar nesta aba**, **Desligar em todas
+as páginas** e desmarcar o automático passam a pedir a senha — num overlay que cobre o popup
+inteiro, para não passar despercebido. Ativar e mexer na chance continuam livres. A senha não é
 guardada em claro — fica só o SHA-256 dela com um salt aleatório de 16 bytes, em
 `chrome.storage.sync`. **Remover senha** também exige a senha atual.
 

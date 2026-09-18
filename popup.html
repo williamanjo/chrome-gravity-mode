@@ -78,6 +78,34 @@
     .lock button.ghost:hover { background: #343950; }
     .lock .hint { font-size: 11px; color: #757b90; margin-top: 6px; }
     .lock .error { font-size: 11px; color: #ff8080; margin-top: 6px; min-height: 14px; }
+
+    /* O pedido de senha cobre o popup inteiro: no rodape era facil nao ver. */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      box-sizing: border-box;
+      background: rgba(9, 11, 17, 0.96);
+    }
+    .overlay .card { width: 100%; }
+    .overlay .reason { font-size: 12px; color: #e7e9f0; margin-bottom: 8px; }
+    .overlay input[type=password] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border: 1px solid #2f3446;
+      border-radius: 8px;
+      background: #171a24;
+      color: #e7e9f0;
+      font: inherit;
+    }
+    .overlay input[type=password]:focus { outline: 0; border-color: #4f7cff; }
+    .overlay button { margin-top: 6px; padding: 8px 10px; font-size: 12px; }
+    .overlay button.ghost { background: #2a2e3c; }
+    .overlay .error { font-size: 11px; color: #ff8080; margin-top: 6px; min-height: 14px; }
     .hidden { display: none; }
     footer { margin-top: 12px; font-size: 11px; color: #757b90; }
   </style>
@@ -99,7 +127,7 @@
 
   <label class="toggle">
     <input type="checkbox" id="autoRun" />
-    Ativar automatico em toda pagina
+    <span id="autoRunLabel">Ativar automatico em toda pagina</span>
   </label>
 
   <section class="lock">
@@ -112,7 +140,7 @@
     <div id="lockIdle">
       <input type="password" id="lockNew" placeholder="Nova senha" autocomplete="new-password" />
       <button id="lockSet">Proteger</button>
-      <div class="hint">Trava so o botao deste popup. Quem abrir chrome://extensions ainda desliga a extensao na mao.</div>
+      <div class="hint">Trava so os botoes deste popup. Quem abrir chrome://extensions ainda desliga a extensao na mao.</div>
     </div>
 
     <!-- Com senha: remove a protecao. -->
@@ -120,18 +148,21 @@
       <button id="lockRemove" class="ghost">Remover senha</button>
     </div>
 
-    <!-- Pedido de senha antes de uma acao protegida. -->
-    <div id="lockPrompt" class="hidden">
-      <div class="hint" id="lockReason">Digite a senha para desativar.</div>
-      <input type="password" id="lockPass" placeholder="Senha" autocomplete="current-password" />
-      <button id="lockConfirm">Confirmar</button>
-      <button id="lockCancel" class="ghost">Cancelar</button>
-    </div>
-
     <div class="error" id="lockError"></div>
   </section>
 
   <footer id="status">&nbsp;</footer>
+
+  <!-- Pedido de senha antes de uma acao protegida. -->
+  <div id="lockPrompt" class="overlay hidden">
+    <div class="card">
+      <div class="reason" id="lockReason">Digite a senha para desativar.</div>
+      <input type="password" id="lockPass" placeholder="Senha" autocomplete="current-password" />
+      <button id="lockConfirm">Confirmar</button>
+      <button id="lockCancel" class="ghost">Cancelar</button>
+      <div class="error" id="lockPromptError"></div>
+    </div>
+  </div>
 
   <script src="popup.js"></script>
 </body>
